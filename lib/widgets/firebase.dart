@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 String verificationId = "";
-Future<void> signInWithPhoneNumber(String phoneNumber, String smsCode) async {
+String phoneNumber = "";
+Future<void> signInWithPhoneNumber(String phoneNumber) async {
   final FirebaseAuth auth = FirebaseAuth.instance;
   await auth.verifyPhoneNumber(
     phoneNumber: phoneNumber,
@@ -12,16 +13,27 @@ Future<void> signInWithPhoneNumber(String phoneNumber, String smsCode) async {
     verificationFailed: (FirebaseAuthException e) {
       print('Verification failed: ${e.message}');
     },
-    codeSent: (String newVerificationId, int? forceCodeResent) async {
+    codeAutoRetrievalTimeout: (String verificationId) {
+      print('Auto-retrieval timed out');
+      verificationId = verificationId;
+    },
+    codeSent: (String verificationId, int? resendToken) {},
+  );
+}
+
+Future<void> verifyOtp(String smsCode) async {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  await auth.verifyPhoneNumber(
+    phoneNumber: phoneNumber,
+    codeSent: (String newVerificationId, int? resendToken) async {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: newVerificationId,
         smsCode: smsCode,
       );
       await auth.signInWithCredential(credential);
     },
-    codeAutoRetrievalTimeout: (String verificationId) {
-      print('Auto-retrieval timed out');
-      verificationId = verificationId;
-    },
+    codeAutoRetrievalTimeout: (String verificationId) {},
+    verificationFailed: (FirebaseAuthException error) {},
+    verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
   );
 }

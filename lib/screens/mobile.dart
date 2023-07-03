@@ -120,7 +120,7 @@ class _MobileNoState extends State<MobileNo> {
                         else
                           {
                             phnNo = "+${selected.phoneCode}${phn.trim()}",
-                            signInWithPhoneNumber(phnNo, ""),
+                            signInWithPhoneNumber(phnNo),
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

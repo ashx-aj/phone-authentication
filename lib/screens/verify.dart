@@ -67,7 +67,7 @@ class Verify extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E3B62)),
                   onPressed: () => {
-                        signInWithPhoneNumber(phone, otp),
+                        verifyOtp(otp),
                         Navigator.push(
                             context,
                             MaterialPageRoute(
